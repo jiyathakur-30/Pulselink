@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/common :: head('Admin Dashboard')}"></head>
+<body>
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div th:replace="~{fragments/sidebar :: sidebar(activePage='dashboard')}"></div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Navbar -->
+            <div th:replace="~{fragments/navbar :: navbar(pageTitle='Admin Dashboard')}"></div>
+
+            <!-- Stats Grid -->
+            <div class="dashboard-grid">
+                <div class="glass-card dashboard-card">
+                    <div class="card-info">
+                        <h3>Total Donors</h3>
+                        <div class="value" th:text="${totalDonors}">0</div>
+                    </div>
+                    <div class="card-icon bg-pink-100"><i class="fa-solid fa-users"></i></div>
+                </div>
+                <div class="glass-card dashboard-card">
+                    <div class="card-info">
+                        <h3>Total Patients</h3>
+                        <div class="value" th:text="${totalPatients}">0</div>
+                    </div>
+                    <div class="card-icon bg-blue-100"><i class="fa-solid fa-hospital-user"></i></div>
+                </div>
+                <div class="glass-card dashboard-card">
+                    <div class="card-info">
+                        <h3>Total Blood Units</h3>
+                        <div class="value" th:text="${totalBloodUnits}">0</div>
+                    </div>
+                    <div class="card-icon bg-pink-100"><i class="fa-solid fa-droplet"></i></div>
+                </div>
+                <div class="glass-card dashboard-card">
+                    <div class="card-info">
+                        <h3>Pending Requests</h3>
+                        <div class="value" th:text="${pendingRequests}">0</div>
+                    </div>
+                    <div class="card-icon bg-yellow-100"><i class="fa-solid fa-clock"></i></div>
+                </div>
+                <div class="glass-card dashboard-card">
+                    <div class="card-info">
+                        <h3>Approved Requests</h3>
+                        <div class="value" th:text="${approvedRequests}">0</div>
+                    </div>
+                    <div class="card-icon bg-green-100"><i class="fa-solid fa-check-double"></i></div>
+                </div>
+                <div class="glass-card dashboard-card">
+                    <div class="card-info">
+                        <h3>Today's Donations</h3>
+                        <div class="value" th:text="${todayDonations}">0</div>
+                    </div>
+                    <div class="card-icon bg-green-100"><i class="fa-solid fa-calendar-day"></i></div>
+                </div>
+            </div>
+
+            <!-- Analytics Row -->
+            <div class="analytics-grid">
+                <!-- Donation vs Request Trends -->
+                <div class="glass-card chart-card">
+                    <div class="card-header">
+                        <h2>Donation & Request Trends</h2>
+                        <i class="fa-solid fa-chart-line" style="color: var(--primary-dark);"></i>
+                    </div>
+                    <div style="height: 300px; position: relative;">
+                        <canvas id="trendsChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Blood Group Stock Distribution -->
+                <div class="glass-card chart-card">
+                    <div class="card-header">
+                        <h2>Stock Distribution</h2>
+                        <i class="fa-solid fa-chart-pie" style="color: var(--primary-dark);"></i>
+                    </div>
+                    <div style="height: 300px; position: relative;">
+                        <canvas id="bloodGroupChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions Banner -->
+            <div class="glass-card" style="padding: 24px; margin-bottom: 30px; display: flex; flex-direction: column; gap: 15px;">
+                <h2 style="font-size: 1.15rem; font-weight: 600;">Quick Management Actions</h2>
+                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                    <a th:href="@{/admin/donations}" class="btn btn-primary"><i class="fa-solid fa-hand-holding-droplet"></i> Record Donation</a>
+                    <a th:href="@{/admin/requests}" class="btn btn-secondary"><i class="fa-solid fa-hand-holding-hand"></i> Approve Requests</a>
+                    <a th:href="@{/admin/inventory}" class="btn btn-secondary"><i class="fa-solid fa-cubes"></i> Manage Inventory</a>
+                    <a th:href="@{/admin/reports}" class="btn btn-secondary"><i class="fa-solid fa-file-invoice"></i> Generate Reports</a>
+                </div>
+            </div>
+
+            <!-- Recent Data Grid -->
+            <div class="analytics-grid" style="grid-template-columns: 1.1fr 0.9fr;">
+                <!-- Recent Requests -->
+                <div class="glass-card table-card">
+                    <div class="card-header">
+                        <h2>Recent Blood Requests</h2>
+                        <a th:href="@{/admin/requests}" style="font-size: 0.85rem; color: var(--primary-dark); font-weight: 600;">View All</a>
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Patient</th>
+                                    <th>Blood Group</th>
+                                    <th>Units</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="req : ${recentRequests}">
+                                    <td th:text="${req.patient.user.name}">Patient</td>
+                                    <td th:text="${req.bloodGroup}">O+</td>
+                                    <td th:text="${req.unitsRequested}">1</td>
+                                    <td>
+                                        <span class="badge" th:classappend="'badge-' + ${#strings.toLowerCase(req.status)}" th:text="${req.status}">PENDING</span>
+                                    </td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(recentRequests)}">
+                                    <td colspan="4" style="text-align: center; color: var(--text-light);">No blood requests found</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Recent Donations -->
+                <div class="glass-card table-card">
+                    <div class="card-header">
+                        <h2>Recent Donations</h2>
+                        <a th:href="@{/admin/donations}" style="font-size: 0.85rem; color: var(--primary-dark); font-weight: 600;">View All</a>
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Donor</th>
+                                    <th>Blood Group</th>
+                                    <th>Units</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="don : ${recentDonations}">
+                                    <td th:text="${don.donor.user.name}">Donor</td>
+                                    <td th:text="${don.bloodGroup}">A+</td>
+                                    <td th:text="${don.unitsDonated}">1</td>
+                                    <td th:text="${#temporals.format(don.donationDate, 'yyyy-MM-dd')}">Date</td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(recentDonations)}">
+                                    <td colspan="4" style="text-align: center; color: var(--text-light);">No recent donations found</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer th:replace="~{fragments/common :: footer}"></footer>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script th:src="@{/js/main.js}"></script>
+</body>
+</html>

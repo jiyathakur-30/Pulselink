@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/common :: head('Profile Settings')}"></head>
+<body>
+
+    <div class="dashboard-container">
+        <div th:replace="~{fragments/sidebar :: sidebar(activePage='profile')}"></div>
+
+        <main class="main-content">
+            <div th:replace="~{fragments/navbar :: navbar(pageTitle='Profile Settings')}"></div>
+
+            <!-- Notifications -->
+            <div th:if="${param.success}" class="alert alert-success">
+                <i class="fa-solid fa-circle-check"></i> Profile updated successfully!
+            </div>
+            <div th:if="${param.passwordSuccess}" class="alert alert-success">
+                <i class="fa-solid fa-circle-check"></i> Password changed successfully!
+            </div>
+            <div th:if="${param.passwordError}" class="alert alert-error" th:text="${param.passwordError}">
+                Error updating password!
+            </div>
+
+            <!-- Profile Info Form & Password Change Form -->
+            <div class="analytics-grid" style="grid-template-columns: 1.2fr 0.8fr; margin-bottom: 30px;">
+                
+                <!-- Profile Edit Form -->
+                <div class="glass-card" style="padding: 24px;">
+                    <div class="card-header">
+                        <h2>Personal Information</h2>
+                        <i class="fa-solid fa-user-pen" style="color: var(--primary-dark);"></i>
+                    </div>
+
+                    <form th:action="@{/patient/profile/update}" method="post">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <!-- Name -->
+                            <div class="form-group" style="grid-column: span 2;">
+                                <input type="text" name="name" th:value="${user.name}" class="form-input" placeholder=" " required>
+                                <label class="form-label">Full Name</label>
+                            </div>
+
+                            <!-- Email (Readonly) -->
+                            <div class="form-group">
+                                <input type="email" th:value="${user.email}" class="form-input" placeholder=" " readonly style="background: rgba(0,0,0,0.03); cursor: not-allowed;">
+                                <label class="form-label">Email Address (Cannot change)</label>
+                            </div>
+
+                            <!-- Phone -->
+                            <div class="form-group">
+                                <input type="text" name="phone" th:value="${user.phone}" class="form-input" placeholder=" " required>
+                                <label class="form-label">Phone Number</label>
+                            </div>
+
+                            <!-- Blood Group (Readonly) -->
+                            <div class="form-group">
+                                <input type="text" th:value="${patient.bloodGroup}" class="form-input" readonly style="background: rgba(0,0,0,0.03); cursor: not-allowed;">
+                                <label class="form-label">Blood Group (Cannot change)</label>
+                            </div>
+
+                            <!-- Emergency Contact -->
+                            <div class="form-group">
+                                <input type="text" name="emergencyContact" th:value="${patient.emergencyContact}" class="form-input" placeholder=" " required>
+                                <label class="form-label">Emergency Contact</label>
+                            </div>
+
+                            <!-- Medical Conditions -->
+                            <div class="form-group" style="grid-column: span 2;">
+                                <input type="text" name="medicalConditions" th:value="${patient.medicalConditions}" class="form-input" placeholder=" ">
+                                <label class="form-label">Medical Conditions</label>
+                            </div>
+
+                            <!-- Address -->
+                            <div class="form-group" style="grid-column: span 2;">
+                                <input type="text" name="address" th:value="${patient.address}" class="form-input" placeholder=" ">
+                                <label class="form-label">Home Address</label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="margin-top: 15px;"><i class="fa-solid fa-floppy-disk"></i> Save Profile</button>
+                    </form>
+                </div>
+
+                <!-- Password Update Form -->
+                <div class="glass-card" style="padding: 24px;">
+                    <div class="card-header">
+                        <h2>Change Password</h2>
+                        <i class="fa-solid fa-key" style="color: var(--primary-dark);"></i>
+                    </div>
+
+                    <form th:action="@{/patient/profile/password}" method="post">
+                        <!-- Current Password -->
+                        <div class="form-group password-wrapper">
+                            <input type="password" name="currentPassword" class="form-input" placeholder=" " required autocomplete="current-password">
+                            <label class="form-label">Current Password</label>
+                            <i class="fa-solid fa-eye password-toggle"></i>
+                        </div>
+
+                        <!-- New Password -->
+                        <div class="form-group password-wrapper">
+                            <input type="password" name="newPassword" class="form-input" placeholder=" " required autocomplete="new-password">
+                            <label class="form-label">New Password</label>
+                            <i class="fa-solid fa-eye password-toggle"></i>
+                        </div>
+
+                        <button type="submit" class="btn btn-secondary" style="width: 100%; padding: 12px; border-color: var(--primary-dark); color: var(--primary-dark);"><i class="fa-solid fa-lock-open"></i> Change Password</button>
+                    </form>
+                </div>
+
+            </div>
+
+            <!-- Footer -->
+            <footer th:replace="~{fragments/common :: footer}"></footer>
+        </main>
+    </div>
+
+    <script th:src="@{/js/main.js}"></script>
+</body>
+</html>

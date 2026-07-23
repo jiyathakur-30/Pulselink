@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:fragment="sidebar" class="sidebar">
+    <div class="sidebar-logo">
+        <i class="fa-solid fa-droplet"></i>
+        <span>PulseLink</span>
+    </div>
+    
+    <ul class="sidebar-menu">
+        <!-- ADMIN MENU -->
+        <li sec:authorize="hasRole('ADMIN')">
+            <a th:href="@{/admin/dashboard}" class="sidebar-link" th:classappend="${activePage == 'dashboard' ? 'active' : ''}">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+        <li sec:authorize="hasRole('ADMIN')">
+            <a th:href="@{/admin/donors}" class="sidebar-link" th:classappend="${activePage == 'donors' ? 'active' : ''}">
+                <i class="fa-solid fa-users"></i>
+                <span>Donors</span>
+            </a>
+        </li>
+        <li sec:authorize="hasRole('ADMIN')">
+            <a th:href="@{/admin/patients}" class="sidebar-link" th:classappend="${activePage == 'patients' ? 'active' : ''}">
+                <i class="fa-solid fa-hospital-user"></i>
+                <span>Patients</span>
+            </a>
+        </li>
+        <li sec:authorize="hasRole('ADMIN')">
+            <a th:href="@{/admin/inventory}" class="sidebar-link" th:classappend="${activePage == 'inventory' ? 'active' : ''}">
+                <i class="fa-solid fa-cubes"></i>
+                <span>Blood Inventory</span>
+            </a>
+        </li>
+        <li sec:authorize="hasRole('ADMIN')">
+            <a th:href="@{/admin/requests}" class="sidebar-link" th:classappend="${activePage == 'requests' ? 'active' : ''}">
+                <i class="fa-solid fa-hand-holding-hand"></i>
+                <span>Blood Requests</span>
+            </a>
+        </li>
+        <li sec:authorize="hasRole('ADMIN')">
+            <a th:href="@{/admin/donations}" class="sidebar-link" th:classappend="${activePage == 'donations' ? 'active' : ''}">
+                <i class="fa-solid fa-hand-holding-droplet"></i>
+                <span>Donations</span>
+            </a>
+        </li>
+        <li sec:authorize="hasRole('ADMIN')">
+            <a th:href="@{/admin/reports}" class="sidebar-link" th:classappend="${activePage == 'reports' ? 'active' : ''}">
+                <i class="fa-solid fa-file-invoice"></i>
+                <span>Reports</span>
+            </a>
+        </li>
+
+        <!-- DONOR MENU -->
+        <li sec:authorize="hasRole('DONOR')">
+            <a th:href="@{/donor/dashboard}" class="sidebar-link" th:classappend="${activePage == 'dashboard' ? 'active' : ''}">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+        <li sec:authorize="hasRole('DONOR')">
+            <a th:href="@{/donor/profile}" class="sidebar-link" th:classappend="${activePage == 'profile' ? 'active' : ''}">
+                <i class="fa-solid fa-user-gear"></i>
+                <span>Profile Settings</span>
+            </a>
+        </li>
+
+        <!-- PATIENT MENU -->
+        <li sec:authorize="hasRole('PATIENT')">
+            <a th:href="@{/patient/dashboard}" class="sidebar-link" th:classappend="${activePage == 'dashboard' ? 'active' : ''}">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+        <li sec:authorize="hasRole('PATIENT')">
+            <a th:href="@{/patient/profile}" class="sidebar-link" th:classappend="${activePage == 'profile' ? 'active' : ''}">
+                <i class="fa-solid fa-user-gear"></i>
+                <span>Profile Settings</span>
+            </a>
+        </li>
+    </ul>
+    
+    <div class="sidebar-footer">
+        <form th:action="@{/logout}" method="post" id="logoutForm">
+            <button type="submit" class="sidebar-link" style="width: 100%; border: none; background: none; text-align: left; cursor: pointer;">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </button>
+        </form>
+    </div>
+</div>
+</html>

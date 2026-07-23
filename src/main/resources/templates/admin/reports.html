@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/common :: head('Reports')}"></head>
+<body>
+
+    <div class="dashboard-container">
+        <div th:replace="~{fragments/sidebar :: sidebar(activePage='reports')}"></div>
+
+        <main class="main-content">
+            <div th:replace="~{fragments/navbar :: navbar(pageTitle='Reports Hub')}"></div>
+
+            <div th:if="${param.generated}" class="alert alert-success">
+                <i class="fa-solid fa-circle-check"></i> Report metadata logged successfully! You can download it below.
+            </div>
+
+            <!-- Report Options Grid -->
+            <div class="dashboard-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+                
+                <!-- Stock Report -->
+                <div class="glass-card" style="padding: 24px; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <h3 style="font-size: 1.15rem; font-weight: 600; color: var(--primary-dark); margin-bottom: 8px;"><i class="fa-solid fa-cubes"></i> Blood Stock Report</h3>
+                        <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 20px;">Contains current inventory levels for all blood groups with availability status.</p>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <a th:href="@{/admin/reports/download(type='STOCK', format='PDF')}" class="btn btn-primary" style="flex: 1; padding: 10px;"><i class="fa-solid fa-file-pdf"></i> PDF</a>
+                        <a th:href="@{/admin/reports/download(type='STOCK', format='EXCEL')}" class="btn btn-secondary" style="flex: 1; padding: 10px;"><i class="fa-solid fa-file-excel"></i> Excel</a>
+                    </div>
+                </div>
+
+                <!-- Donor Report -->
+                <div class="glass-card" style="padding: 24px; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <h3 style="font-size: 1.15rem; font-weight: 600; color: var(--primary-dark); margin-bottom: 8px;"><i class="fa-solid fa-users"></i> Donors Directory</h3>
+                        <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 20px;">Complete directory of registered donors, blood groups, and eligibility status.</p>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <a th:href="@{/admin/reports/download(type='DONOR', format='PDF')}" class="btn btn-primary" style="flex: 1; padding: 10px;"><i class="fa-solid fa-file-pdf"></i> PDF</a>
+                        <a th:href="@{/admin/reports/download(type='DONOR', format='EXCEL')}" class="btn btn-secondary" style="flex: 1; padding: 10px;"><i class="fa-solid fa-file-excel"></i> Excel</a>
+                    </div>
+                </div>
+
+                <!-- Patient Report -->
+                <div class="glass-card" style="padding: 24px; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <h3 style="font-size: 1.15rem; font-weight: 600; color: var(--primary-dark); margin-bottom: 8px;"><i class="fa-solid fa-hospital-user"></i> Patients Directory</h3>
+                        <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 20px;">Details of all registered patients, blood groups, and emergency contacts.</p>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <a th:href="@{/admin/reports/download(type='PATIENT', format='PDF')}" class="btn btn-primary" style="flex: 1; padding: 10px;"><i class="fa-solid fa-file-pdf"></i> PDF</a>
+                        <a th:href="@{/admin/reports/download(type='PATIENT', format='EXCEL')}" class="btn btn-secondary" style="flex: 1; padding: 10px;"><i class="fa-solid fa-file-excel"></i> Excel</a>
+                    </div>
+                </div>
+
+                <!-- Donation Report -->
+                <div class="glass-card" style="padding: 24px; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <h3 style="font-size: 1.15rem; font-weight: 600; color: var(--primary-dark); margin-bottom: 8px;"><i class="fa-solid fa-hand-holding-droplet"></i> Donations History</h3>
+                        <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 20px;">Detailed log of all recorded blood donations with certificate verification codes.</p>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <a th:href="@{/admin/reports/download(type='DONATION', format='PDF')}" class="btn btn-primary" style="flex: 1; padding: 10px;"><i class="fa-solid fa-file-pdf"></i> PDF</a>
+                        <a th:href="@{/admin/reports/download(type='DONATION', format='EXCEL')}" class="btn btn-secondary" style="flex: 1; padding: 10px;"><i class="fa-solid fa-file-excel"></i> Excel</a>
+                    </div>
+                </div>
+
+                <!-- Request Report -->
+                <div class="glass-card" style="padding: 24px; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <h3 style="font-size: 1.15rem; font-weight: 600; color: var(--primary-dark); margin-bottom: 8px;"><i class="fa-solid fa-hand-holding-hand"></i> Blood Requests Log</h3>
+                        <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 20px;">Complete history of blood requests, justification, and approval statuses.</p>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <a th:href="@{/admin/reports/download(type='REQUEST', format='PDF')}" class="btn btn-primary" style="flex: 1; padding: 10px;"><i class="fa-solid fa-file-pdf"></i> PDF</a>
+                        <a th:href="@{/admin/reports/download(type='REQUEST', format='EXCEL')}" class="btn btn-secondary" style="flex: 1; padding: 10px;"><i class="fa-solid fa-file-excel"></i> Excel</a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Generated Reports Log -->
+            <div class="glass-card table-card" style="margin-top: 30px; flex: 1;">
+                <div class="card-header">
+                    <h2>Generated Reports Metadata</h2>
+                </div>
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Report Type</th>
+                                <th>Generated By</th>
+                                <th>Timestamp</th>
+                                <th style="text-align: right;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="rep : ${reportsList}">
+                                <td th:text="${rep.reportType}">STOCK</td>
+                                <td th:text="${rep.generatedBy.name}">Admin</td>
+                                <td th:text="${#temporals.format(rep.generatedAt, 'yyyy-MM-dd HH:mm:ss')}">Time</td>
+                                <td style="text-align: right;">
+                                    <a th:href="${rep.filePath}" class="btn btn-secondary" style="padding: 6px 14px; font-size: 0.8rem;"><i class="fa-solid fa-download"></i> Download</a>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(reportsList)}">
+                                <td colspan="4" style="text-align: center; padding: 30px; color: var(--text-light);">
+                                    <i class="fa-solid fa-folder-open" style="font-size: 2.5rem; display: block; margin-bottom: 10px; color: var(--primary-light);"></i>
+                                    No reports metadata logged.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer th:replace="~{fragments/common :: footer}"></footer>
+        </main>
+    </div>
+
+    <script th:src="@{/js/main.js}"></script>
+</body>
+</html>

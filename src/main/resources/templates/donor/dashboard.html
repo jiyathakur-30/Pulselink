@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/common :: head('Donor Dashboard')}"></head>
+<body>
+
+    <div class="dashboard-container">
+        <div th:replace="~{fragments/sidebar :: sidebar(activePage='dashboard')}"></div>
+
+        <main class="main-content">
+            <div th:replace="~{fragments/navbar :: navbar(pageTitle='Donor Dashboard')}"></div>
+
+            <!-- Alerts -->
+            <div th:if="${param.appointmentBooked}" class="alert alert-success">
+                <i class="fa-solid fa-circle-check"></i> Appointment booked successfully! Please be on time.
+            </div>
+            <div th:if="${param.error}" class="alert alert-error" th:text="${param.error}">
+                Error booking appointment!
+            </div>
+
+            <!-- Welcome Row -->
+            <div class="glass-card" style="padding: 30px; margin-bottom: 24px; display: grid; grid-template-columns: 1.5fr 1fr; gap: 20px; align-items: center;">
+                <div>
+                    <h1 style="font-size: 1.8rem; font-weight: 700; margin-bottom: 10px;">Welcome back, <span th:text="${donor.user.name}">Donor Name</span>!</h1>
+                    <p style="color: var(--text-light); line-height: 1.6;">Thank you for being a vital part of PulseLink. Your donations directly contribute to saving lives in our healthcare network.</p>
+                    
+                    <div style="display: flex; gap: 15px; margin-top: 20px; align-items: center;">
+                        <span class="badge" th:classappend="${badgeClass}" th:text="${badge}">Bronze Donor</span>
+                        <div style="font-size: 0.9rem; color: var(--text-light);">
+                            Blood Group: <strong th:text="${donor.bloodGroup}" style="color: var(--primary-dark);">O+</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Eligibility Card -->
+                <div class="glass-card" style="padding: 20px; background: rgba(236, 72, 153, 0.02); border-color: rgba(236, 72, 153, 0.1); text-align: center;">
+                    <h3 style="font-size: 0.95rem; font-weight: 600; color: var(--text-light); margin-bottom: 10px;">Donation Eligibility</h3>
+                    
+                    <div th:if="${eligible}">
+                        <div style="font-size: 2.5rem; color: var(--success);"><i class="fa-solid fa-circle-check"></i></div>
+                        <div style="font-weight: 600; color: var(--success); margin-top: 5px;">You are eligible to donate!</div>
+                    </div>
+
+                    <div th:if="${!eligible}">
+                        <div style="font-size: 2.5rem; color: var(--warning);"><i class="fa-solid fa-clock"></i></div>
+                        <div style="font-weight: 600; color: var(--warning); margin-top: 5px;">Not Eligible Yet</div>
+                        <div style="font-size: 0.8rem; color: var(--text-light); margin-top: 5px;">
+                            Next eligible: <span th:text="${#temporals.format(nextEligibleDate, 'yyyy-MM-dd')}">Date</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="analytics-grid">
+                <!-- Book Appointment Form -->
+                <div class="glass-card" style="padding: 24px;">
+                    <div class="card-header">
+                        <h2>Book Donation Appointment</h2>
+                        <i class="fa-solid fa-calendar-check" style="color: var(--primary-dark);"></i>
+                    </div>
+                    
+                    <form th:action="@{/donor/appointment/book}" method="post">
+                        <!-- Date -->
+                        <div class="form-group">
+                            <input type="date" name="date" class="form-input" required th:min="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}" style="height: 50px;">
+                            <label class="form-label" style="top: 0; font-size: 0.8rem; background: var(--bg-card); padding: 0 5px; transform: translateY(-50%);">Preferred Date</label>
+                        </div>
+
+                        <!-- Time Slot -->
+                        <div class="form-group">
+                            <select name="time" class="form-input" required style="padding-top: 10px; padding-bottom: 10px; height: 50px;">
+                                <option value="">Select Time Slot</option>
+                                <option value="09:00 AM">09:00 AM</option>
+                                <option value="10:30 AM">10:30 AM</option>
+                                <option value="11:00 AM">11:00 AM</option>
+                                <option value="02:00 PM">02:00 PM</option>
+                                <option value="03:30 PM">03:30 PM</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 14px;"><i class="fa-solid fa-circle-check"></i> Confirm Appointment</button>
+                    </form>
+                </div>
+
+                <!-- Appointment history and status -->
+                <div class="glass-card table-card">
+                    <div class="card-header">
+                        <h2>Your Appointments</h2>
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Time Slot</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="appt : ${appointments}">
+                                    <td th:text="${#temporals.format(appt.appointmentDate, 'yyyy-MM-dd')}">Date</td>
+                                    <td th:text="${appt.appointmentTime}">Time</td>
+                                    <td>
+                                        <span class="badge" th:classappend="'badge-' + ${#strings.toLowerCase(appt.status)}" th:text="${appt.status}">SCHEDULED</span>
+                                    </td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(appointments)}">
+                                    <td colspan="3" style="text-align: center; color: var(--text-light);">No scheduled appointments</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Donation History & Certificate download -->
+            <div class="glass-card table-card" style="flex: 1; margin-bottom: 30px;">
+                <div class="card-header">
+                    <h2>Donation History & Certificates</h2>
+                </div>
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Blood Group</th>
+                                <th>Units Donated</th>
+                                <th>Verification Code</th>
+                                <th style="text-align: right;">Certificate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="don : ${donations}">
+                                <td th:text="${#temporals.format(don.donationDate, 'yyyy-MM-dd')}">Date</td>
+                                <td th:text="${don.bloodGroup}" style="font-weight: 600; color: var(--primary-dark);">O+</td>
+                                <td th:text="${don.unitsDonated}">1</td>
+                                <td th:text="${don.certificateCode}" style="font-family: monospace;">CERT-CODE</td>
+                                <td style="text-align: right;">
+                                    <a th:href="@{/donor/certificate/download/{id}(id=${don.donationId})}" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.8rem;">
+                                        <i class="fa-solid fa-file-pdf"></i> Download PDF
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(donations)}">
+                                <td colspan="5" style="text-align: center; padding: 30px; color: var(--text-light);">
+                                    <i class="fa-solid fa-folder-open" style="font-size: 2.5rem; display: block; margin-bottom: 10px; color: var(--primary-light);"></i>
+                                    No donation history found.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer th:replace="~{fragments/common :: footer}"></footer>
+        </main>
+    </div>
+
+    <script th:src="@{/js/main.js}"></script>
+</body>
+</html>

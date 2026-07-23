@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/common :: head('Blood Inventory')}"></head>
+<body>
+
+    <div class="dashboard-container">
+        <div th:replace="~{fragments/sidebar :: sidebar(activePage='inventory')}"></div>
+
+        <main class="main-content">
+            <div th:replace="~{fragments/navbar :: navbar(pageTitle='Blood Inventory')}"></div>
+
+            <!-- Add Stock and notifications -->
+            <div th:if="${param.success}" class="alert alert-success">
+                <i class="fa-solid fa-circle-check"></i> Stock updated successfully!
+            </div>
+
+            <!-- Top Row: Add Stock Form -->
+            <div class="glass-card" style="padding: 24px; margin-bottom: 30px;">
+                <h2 style="font-size: 1.15rem; font-weight: 600; margin-bottom: 20px;"><i class="fa-solid fa-plus" style="color: var(--primary-dark); margin-right: 8px;"></i> Replenish Blood Stock</h2>
+                <form th:action="@{/admin/inventory/add}" method="post" style="display: flex; gap: 20px; align-items: flex-end; flex-wrap: wrap;">
+                    <div class="form-group" style="margin-bottom: 0; min-width: 200px;">
+                        <select name="bloodGroup" class="form-input" required style="padding-top: 10px; padding-bottom: 10px; height: 50px;">
+                            <option value="">Select Blood Group</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" style="margin-bottom: 0; min-width: 200px; position: relative;">
+                        <input type="number" name="units" class="form-input" placeholder=" " min="1" required style="height: 50px;">
+                        <label class="form-label">Units (e.g. 5)</label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="height: 50px; padding: 0 30px;"><i class="fa-solid fa-floppy-disk"></i> Update Stock</button>
+                </form>
+            </div>
+
+            <!-- Inventory Grid -->
+            <div class="dashboard-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+                <div th:each="item : ${inventoryList}" class="glass-card" style="padding: 24px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <div style="font-size: 2rem; font-weight: 700; color: var(--primary-dark);" th:text="${item.bloodGroup}">O+</div>
+                        <div class="badge" th:classappend="${item.unitsAvailable > 5 ? 'badge-approved' : 'badge-rejected'}" 
+                             th:text="${item.unitsAvailable > 5 ? 'AVAILABLE' : 'CRITICAL'}">AVAILABLE</div>
+                    </div>
+                    
+                    <div style="font-size: 0.95rem; color: var(--text-light);">
+                        Stock: <span style="font-weight: 600; color: var(--text-dark);" th:text="${item.unitsAvailable} + ' Units'">12 Units</span>
+                    </div>
+
+                    <!-- Progress Bar (Based on Max 40 units for 100%) -->
+                    <div class="progress-container">
+                        <div class="progress-bar" th:style="'width: ' + ${T(java.lang.Math).min(100, item.unitsAvailable * 2.5)} + '%'"></div>
+                    </div>
+                    
+                    <div style="font-size: 0.75rem; color: var(--text-light); margin-top: 12px;">
+                        Last updated: <span th:text="${#temporals.format(item.lastUpdated, 'yyyy-MM-dd HH:mm')}">Time</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer th:replace="~{fragments/common :: footer}"></footer>
+        </main>
+    </div>
+
+    <script th:src="@{/js/main.js}"></script>
+</body>
+</html>

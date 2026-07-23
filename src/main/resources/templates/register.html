@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/common :: head('Register')}"></head>
+<body style="background: linear-gradient(135deg, #FFF7FB 0%, #FCE7F3 100%);">
+
+    <div class="auth-container" style="padding: 20px 0;">
+        <div class="auth-card glass-card" style="max-width: 600px; padding: 30px;">
+            <div class="auth-header" style="margin-bottom: 20px;">
+                <div class="logo" style="justify-content: center; margin-bottom: 10px;">
+                    <i class="fa-solid fa-droplet"></i>
+                    <span>PulseLink</span>
+                </div>
+                <h2>Create Account</h2>
+                <p>Register as a Donor or Patient below</p>
+            </div>
+
+            <!-- Error Banner -->
+            <div th:if="${errorMessage}" class="alert alert-error" th:text="${errorMessage}">
+                Error registering account!
+            </div>
+
+            <form th:action="@{/register}" th:object="${user}" method="post" id="regForm">
+                
+                <!-- Account Type Selector -->
+                <div style="margin-bottom: 24px; text-align: center;">
+                    <label style="font-weight: 500; display: block; margin-bottom: 10px;">I want to register as a:</label>
+                    <div style="display: flex; gap: 15px; justify-content: center;">
+                        <label class="btn btn-secondary" id="label-donor" style="padding: 10px 24px; cursor: pointer; border-radius: var(--radius-md);">
+                            <input type="radio" th:field="*{roleType}" value="DONOR" id="roleDonor" style="margin-right: 8px; accent-color: var(--primary-dark);" checked> Donor
+                        </label>
+                        <label class="btn btn-secondary" id="label-patient" style="padding: 10px 24px; cursor: pointer; border-radius: var(--radius-md);">
+                            <input type="radio" th:field="*{roleType}" value="PATIENT" id="rolePatient" style="margin-right: 8px; accent-color: var(--primary-dark);"> Patient
+                        </label>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <!-- Email -->
+                    <div class="form-group">
+                        <input type="email" th:field="*{email}" class="form-input" placeholder=" " required autocomplete="email">
+                        <label th:for="email" class="form-label">Email Address</label>
+                        <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color: var(--danger); font-size: 0.75rem;"></span>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="form-group password-wrapper">
+                        <input type="password" th:field="*{password}" class="form-input" placeholder=" " required autocomplete="new-password">
+                        <label th:for="password" class="form-label">Password</label>
+                        <i class="fa-solid fa-eye password-toggle"></i>
+                        <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color: var(--danger); font-size: 0.75rem;"></span>
+                    </div>
+
+                    <!-- Name -->
+                    <div class="form-group">
+                        <input type="text" th:field="*{name}" class="form-input" placeholder=" " required autocomplete="name">
+                        <label th:for="name" class="form-label">Full Name</label>
+                        <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color: var(--danger); font-size: 0.75rem;"></span>
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="form-group">
+                        <input type="text" th:field="*{phone}" class="form-input" placeholder=" " required autocomplete="tel">
+                        <label th:for="phone" class="form-label">Phone Number</label>
+                        <span th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" style="color: var(--danger); font-size: 0.75rem;"></span>
+                    </div>
+
+                    <!-- Blood Group -->
+                    <div class="form-group">
+                        <select th:field="*{bloodGroup}" class="form-input" required style="padding-top: 10px; padding-bottom: 10px; height: 50px;">
+                            <option value="">Select Blood Group</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                        </select>
+                        <span th:if="${#fields.hasErrors('bloodGroup')}" th:errors="*{bloodGroup}" style="color: var(--danger); font-size: 0.75rem;"></span>
+                    </div>
+
+                    <!-- DOB -->
+                    <div class="form-group">
+                        <input type="date" th:field="*{dob}" class="form-input" placeholder=" " required style="height: 50px;">
+                        <label th:for="dob" class="form-label" style="top: 0; font-size: 0.8rem; background: var(--bg-card); padding: 0 5px; transform: translateY(-50%);">Date of Birth</label>
+                        <span th:if="${#fields.hasErrors('dob')}" th:errors="*{dob}" style="color: var(--danger); font-size: 0.75rem;"></span>
+                    </div>
+
+                    <!-- Gender -->
+                    <div class="form-group">
+                        <select th:field="*{gender}" class="form-input" required style="padding-top: 10px; padding-bottom: 10px; height: 50px;">
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <span th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}" style="color: var(--danger); font-size: 0.75rem;"></span>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="form-group" style="grid-column: span 2;">
+                        <input type="text" th:field="*{address}" class="form-input" placeholder=" ">
+                        <label th:for="address" class="form-label">Home Address</label>
+                    </div>
+
+                    <!-- Donor Specific Fields -->
+                    <div class="form-group donor-fields" style="grid-column: span 2;">
+                        <input type="number" step="0.1" th:field="*{weight}" class="form-input" placeholder=" " id="weightInput">
+                        <label th:for="weight" class="form-label">Weight (kg) - Min 45kg</label>
+                        <span th:if="${#fields.hasErrors('weight')}" th:errors="*{weight}" style="color: var(--danger); font-size: 0.75rem;"></span>
+                    </div>
+
+                    <!-- Patient Specific Fields -->
+                    <div class="form-group patient-fields" style="grid-column: span 2; display: none;">
+                        <div class="form-group">
+                            <input type="text" th:field="*{medicalConditions}" class="form-input" placeholder=" ">
+                            <label th:for="medicalConditions" class="form-label">Medical Conditions / Justification</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" th:field="*{emergencyContact}" class="form-input" placeholder=" ">
+                            <label th:for="emergencyContact" class="form-label">Emergency Contact Name & Phone</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 14px; margin-top: 10px;">Sign Up</button>
+            </form>
+
+            <div style="text-align: center; margin-top: 20px; font-size: 0.9rem; color: var(--text-light);">
+                Already have an account? <a th:href="@{/login}" style="color: var(--primary-dark); font-weight: 600;">Login Here</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script th:src="@{/js/main.js}"></script>
+    <script>
+        // Toggle role specific fields
+        const donorRadio = document.getElementById('roleDonor');
+        const patientRadio = document.getElementById('rolePatient');
+        const donorFields = document.querySelectorAll('.donor-fields');
+        const patientFields = document.querySelectorAll('.patient-fields');
+        const weightInput = document.getElementById('weightInput');
+
+        function toggleFields() {
+            if (donorRadio.checked) {
+                donorFields.forEach(f => f.style.display = 'block');
+                patientFields.forEach(f => f.style.display = 'none');
+                weightInput.setAttribute('required', 'required');
+            } else {
+                donorFields.forEach(f => f.style.display = 'none');
+                patientFields.forEach(f => f.style.display = 'block');
+                weightInput.removeAttribute('required');
+            }
+        }
+
+        donorRadio.addEventListener('change', toggleFields);
+        patientRadio.addEventListener('change', toggleFields);
+        
+        // Handle direct landing link with params ?role=patient
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('role') === 'patient') {
+            patientRadio.checked = true;
+            toggleFields();
+        } else {
+            donorRadio.checked = true;
+            toggleFields();
+        }
+    </script>
+</body>
+</html>

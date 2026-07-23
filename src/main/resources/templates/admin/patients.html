@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/common :: head('Manage Patients')}"></head>
+<body>
+
+    <div class="dashboard-container">
+        <div th:replace="~{fragments/sidebar :: sidebar(activePage='patients')}"></div>
+
+        <main class="main-content">
+            <div th:replace="~{fragments/navbar :: navbar(pageTitle='Manage Patients')}"></div>
+
+            <!-- Controls and search -->
+            <div class="glass-card" style="padding: 20px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; gap: 15px; flex-wrap: wrap;">
+                <form th:action="@{/admin/patients}" method="get" style="display: flex; gap: 10px; flex: 1; max-width: 450px;">
+                    <div class="form-group" style="margin-bottom: 0; flex: 1; position: relative;">
+                        <input type="text" name="query" th:value="${query}" class="form-input" placeholder="Search patients by name, email, blood..." style="padding-right: 40px;">
+                        <i class="fa-solid fa-magnifying-glass" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--text-light);"></i>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="padding: 10px 20px;">Search</button>
+                </form>
+            </div>
+
+            <!-- Patients Table -->
+            <div class="glass-card table-card" style="flex: 1;">
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Blood Group</th>
+                                <th>Gender</th>
+                                <th>Emergency Contact</th>
+                                <th>Conditions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="patient : ${patientPage.content}">
+                                <td th:text="${patient.user.name}">Sarah Jenkins</td>
+                                <td th:text="${patient.user.email}">sarah@example.com</td>
+                                <td th:text="${patient.user.phone}">+15550200</td>
+                                <td th:text="${patient.bloodGroup}" style="font-weight: 600; color: var(--primary-dark);">A-</td>
+                                <td th:text="${patient.gender}">Female</td>
+                                <td th:text="${patient.emergencyContact != null ? patient.emergencyContact : 'N/A'}">John Jenkins</td>
+                                <td th:text="${patient.medicalConditions != null ? patient.medicalConditions : 'None'}">Anemia</td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(patientPage.content)}">
+                                <td colspan="7" style="text-align: center; padding: 30px; color: var(--text-light);">
+                                    <i class="fa-solid fa-folder-open" style="font-size: 2.5rem; display: block; margin-bottom: 10px; color: var(--primary-light);"></i>
+                                    No patients found matching criteria.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination" th:if="${patientPage.totalPages > 1}" style="display: flex; justify-content: center; gap: 8px; margin-top: 24px;">
+                    <a th:if="${currentPage > 0}" th:href="@{/admin/patients(query=${query}, page=${currentPage - 1})}" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.85rem;">Previous</a>
+                    
+                    <span th:each="i : ${#numbers.sequence(0, patientPage.totalPages - 1)}">
+                        <a th:href="@{/admin/patients(query=${query}, page=${i})}" class="btn" 
+                           th:classappend="${i == currentPage ? 'btn-primary' : 'btn-secondary'}" 
+                           th:text="${i + 1}" style="padding: 6px 12px; font-size: 0.85rem;">1</a>
+                    </span>
+                    
+                    <a th:if="${currentPage < patientPage.totalPages - 1}" th:href="@{/admin/patients(query=${query}, page=${currentPage + 1})}" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.85rem;">Next</a>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer th:replace="~{fragments/common :: footer}"></footer>
+        </main>
+    </div>
+
+    <script th:src="@{/js/main.js}"></script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/common :: head('Donate Blood, Save Lives')}"></head>
+<body>
+
+    <!-- Header / Navbar -->
+    <header class="landing-header glass-card" style="margin: 20px 6%; padding: 15px 30px;">
+        <div class="logo">
+            <i class="fa-solid fa-droplet" style="color: var(--primary-dark);"></i>
+            <span>PulseLink</span>
+        </div>
+        <nav class="landing-nav">
+            <a href="#about" class="nav-link">About Us</a>
+            <a href="#features" class="nav-link">Features</a>
+            <a href="#faq" class="nav-link">FAQs</a>
+            <a th:href="@{/login}" class="btn btn-secondary" style="padding: 8px 20px;">Login</a>
+            <a th:href="@{/register}" class="btn btn-primary" style="padding: 8px 20px;">Register</a>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-text">
+            <h1 class="gradient-text">Donate Blood, Save Lives</h1>
+            <h3 style="font-size: 1.5rem; font-weight: 500; color: var(--text-light); margin-bottom: 20px;">Connecting Donors. Saving Lives.</h3>
+            <p>PulseLink is a smart blood bank management platform designed to bridge the gap between donors and patients in real time. Become a hero today.</p>
+            <div class="hero-actions">
+                <a th:href="@{/register?role=donor}" class="btn btn-primary">Become a Donor</a>
+                <a th:href="@{/register?role=patient}" class="btn btn-secondary">Request Blood</a>
+            </div>
+        </div>
+        <div class="hero-illustration">
+            <div class="blood-drop-animation"></div>
+        </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section class="stats-section">
+        <h2 class="section-title">Our Impact</h2>
+        <div class="stats-grid">
+            <div class="stat-item glass-card">
+                <div class="stat-number" th:text="${donorCount}">120+</div>
+                <div class="stat-label">Active Donors</div>
+            </div>
+            <div class="stat-item glass-card">
+                <div class="stat-number" th:text="${patientCount}">80+</div>
+                <div class="stat-label">Patients Served</div>
+            </div>
+            <div class="stat-item glass-card">
+                <div class="stat-number" th:text="${donationCount}">250+</div>
+                <div class="stat-label">Successful Donations</div>
+            </div>
+            <div class="stat-item glass-card">
+                <div class="stat-number" th:text="${totalBloodUnits}">40+</div>
+                <div class="stat-label">Blood Units Available</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section" style="padding: 60px 0;">
+        <h2 class="section-title">Features</h2>
+        <div class="features-grid">
+            <div class="feature-card glass-card">
+                <div class="feature-icon"><i class="fa-solid fa-bolt"></i></div>
+                <h3>Real-Time Matching</h3>
+                <p>Instantly match blood requests with eligible donors in your area to save critical transit and processing time.</p>
+            </div>
+            <div class="feature-card glass-card">
+                <div class="feature-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                <h3>Safe & Secure</h3>
+                <p>Fully compliant with medical standard data protection. Patient and donor profiles are fully encrypted and verified.</p>
+            </div>
+            <div class="feature-card glass-card">
+                <div class="feature-icon"><i class="fa-solid fa-chart-pie"></i></div>
+                <h3>Inventory Tracking</h3>
+                <p>Hospitals and blood bank managers can view real-time blood stock levels and forecast supply deficiencies.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQs Section -->
+    <section id="faq" class="faq-section">
+        <h2 class="section-title">Frequently Asked Questions</h2>
+        <div class="faq-item">
+            <div class="faq-question">Who is eligible to donate blood? <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="faq-answer">Generally, individuals who are healthy, at least 17 years old, weigh at least 45kg (110 lbs), and haven't donated in the last 56 days are eligible.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">How does PulseLink help in emergencies? <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="faq-answer">PulseLink allows patients and hospitals to create emergency blood requests that notify all registered eligible matching donors instantly.</div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">Are donation records stored securely? <i class="fa-solid fa-chevron-down"></i></div>
+            <div class="faq-answer">Yes, all patient and donor records are stored in a fully secured, role-authenticated database system built using Spring Security.</div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer th:replace="~{fragments/common :: footer}"></footer>
+
+    <!-- Scripts -->
+    <script th:src="@{/js/main.js}"></script>
+</body>
+</html>

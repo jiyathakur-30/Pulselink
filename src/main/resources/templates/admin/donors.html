@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/common :: head('Manage Donors')}"></head>
+<body>
+
+    <div class="dashboard-container">
+        <div th:replace="~{fragments/sidebar :: sidebar(activePage='donors')}"></div>
+
+        <main class="main-content">
+            <div th:replace="~{fragments/navbar :: navbar(pageTitle='Manage Donors')}"></div>
+
+            <!-- Controls and search -->
+            <div class="glass-card" style="padding: 20px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; gap: 15px; flex-wrap: wrap;">
+                <form th:action="@{/admin/donors}" method="get" style="display: flex; gap: 10px; flex: 1; max-width: 450px;">
+                    <div class="form-group" style="margin-bottom: 0; flex: 1; position: relative;">
+                        <input type="text" name="query" th:value="${query}" class="form-input" placeholder="Search donors by name, email, blood..." style="padding-right: 40px;">
+                        <i class="fa-solid fa-magnifying-glass" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--text-light);"></i>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="padding: 10px 20px;">Search</button>
+                </form>
+            </div>
+
+            <!-- Donors Table -->
+            <div class="glass-card table-card" style="flex: 1;">
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Blood Group</th>
+                                <th>Gender</th>
+                                <th>Last Donation</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="donor : ${donorPage.content}">
+                                <td th:text="${donor.user.name}">John Doe</td>
+                                <td th:text="${donor.user.email}">john@example.com</td>
+                                <td th:text="${donor.user.phone}">+123456</td>
+                                <td th:text="${donor.bloodGroup}" style="font-weight: 600; color: var(--primary-dark);">O+</td>
+                                <td th:text="${donor.gender}">Male</td>
+                                <td th:text="${donor.lastDonationDate != null ? #temporals.format(donor.lastDonationDate, 'yyyy-MM-dd') : 'Never'}">Never</td>
+                                <td>
+                                    <span class="badge" th:classappend="${donor.healthStatus == 'ELIGIBLE' ? 'badge-approved' : 'badge-rejected'}" th:text="${donor.healthStatus}">Eligible</span>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(donorPage.content)}">
+                                <td colspan="7" style="text-align: center; padding: 30px; color: var(--text-light);">
+                                    <i class="fa-solid fa-folder-open" style="font-size: 2.5rem; display: block; margin-bottom: 10px; color: var(--primary-light);"></i>
+                                    No donors found matching criteria.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination" th:if="${donorPage.totalPages > 1}" style="display: flex; justify-content: center; gap: 8px; margin-top: 24px;">
+                    <a th:if="${currentPage > 0}" th:href="@{/admin/donors(query=${query}, page=${currentPage - 1})}" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.85rem;">Previous</a>
+                    
+                    <span th:each="i : ${#numbers.sequence(0, donorPage.totalPages - 1)}">
+                        <a th:href="@{/admin/donors(query=${query}, page=${i})}" class="btn" 
+                           th:classappend="${i == currentPage ? 'btn-primary' : 'btn-secondary'}" 
+                           th:text="${i + 1}" style="padding: 6px 12px; font-size: 0.85rem;">1</a>
+                    </span>
+                    
+                    <a th:if="${currentPage < donorPage.totalPages - 1}" th:href="@{/admin/donors(query=${query}, page=${currentPage + 1})}" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.85rem;">Next</a>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer th:replace="~{fragments/common :: footer}"></footer>
+        </main>
+    </div>
+
+    <script th:src="@{/js/main.js}"></script>
+</body>
+</html>

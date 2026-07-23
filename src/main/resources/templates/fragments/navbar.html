@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:fragment="navbar" class="navbar glass-card" style="padding: 16px 24px; border-radius: var(--radius-md);">
+    <div class="breadcrumb" style="font-weight: 600; font-size: 1.1rem; color: var(--primary-dark);">
+        <span th:text="${pageTitle != null ? pageTitle : 'Dashboard'}">Dashboard</span>
+    </div>
+    
+    <div style="display: flex; align-items: center; gap: 24px;">
+        <!-- Notification Dropdown -->
+        <div class="notifications-dropdown-container" style="position: relative;">
+            <button class="btn btn-secondary" id="notif-dropdown-btn" style="padding: 10px; border-radius: 50%; border: none; background: rgba(236, 72, 153, 0.05); position: relative;">
+                <i class="fa-solid fa-bell" style="color: var(--primary-dark); font-size: 1.2rem;"></i>
+                <!-- Notification Badge -->
+                <span class="notification-badge" th:if="${notifications != null and #lists.size(notifications) > 0}"
+                      th:text="${#lists.size(notifications)}"
+                      style="position: absolute; top: -5px; right: -5px; background: var(--danger); color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 0.7rem; display: flex; align-items: center; justify-content: center; font-weight: 700;">
+                    0
+                </span>
+            </button>
+            
+            <div id="notif-dropdown-menu" class="glass-card" style="display: none; position: absolute; right: 0; top: 50px; width: 320px; z-index: 1000; padding: 15px; max-height: 400px; overflow-y: auto;">
+                <h3 style="font-size: 0.95rem; margin-bottom: 12px; border-bottom: 1px solid var(--border-glass); padding-bottom: 8px;">Notifications</h3>
+                <div th:if="${notifications == null or #lists.size(notifications) == 0}" style="padding: 10px; text-align: center; color: var(--text-light); font-size: 0.85rem;">
+                    No notifications
+                </div>
+                <div th:each="notif : ${notifications}" class="notification-item unread" style="padding: 10px; border-radius: var(--radius-sm); margin-bottom: 8px; font-size: 0.85rem; background: rgba(236, 72, 153, 0.02); display: flex; flex-direction: column; gap: 4px;">
+                    <div th:text="${notif.message}">Notification content</div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+                        <span th:text="${#temporals.format(notif.createdAt, 'MMM dd, HH:mm')}" style="font-size: 0.75rem; color: var(--text-light);">Time</span>
+                        <button th:if="${!notif.isRead}" th:data-id="${notif.notificationId}" class="mark-read-btn" style="background: none; border: none; color: var(--primary-dark); cursor: pointer; font-weight: 600; font-size: 0.75rem;">Mark read</button>
+                    </div>
+                </div>
+            </div>
+            
+            <script>
+                document.getElementById('notif-dropdown-btn').addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const menu = document.getElementById('notif-dropdown-menu');
+                    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+                });
+                document.addEventListener('click', function() {
+                    document.getElementById('notif-dropdown-menu').style.display = 'none';
+                });
+            </script>
+        </div>
+        
+        <!-- User Profile Dropdown -->
+        <div class="user-profile-dropdown" onclick="window.location.href='/dashboard'">
+            <div class="avatar" th:text="${#strings.substring(principalName != null ? principalName : 'U', 0, 1).toUpperCase()}">U</div>
+            <div style="display: flex; flex-direction: column; text-align: left;">
+                <span sec:authentication="name" style="font-weight: 600; font-size: 0.9rem;">Email</span>
+                <span sec:authorize="hasRole('ADMIN')" style="font-size: 0.75rem; color: var(--primary-dark); font-weight: 500;">Admin</span>
+                <span sec:authorize="hasRole('DONOR')" style="font-size: 0.75rem; color: var(--primary-dark); font-weight: 500;">Donor</span>
+                <span sec:authorize="hasRole('PATIENT')" style="font-size: 0.75rem; color: var(--primary-dark); font-weight: 500;">Patient</span>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/common :: head('Login')}"></head>
+<body style="background: linear-gradient(135deg, #FFF7FB 0%, #FCE7F3 100%);">
+
+    <div class="auth-container">
+        <div class="auth-card glass-card">
+            <div class="auth-header">
+                <div class="logo" style="justify-content: center; margin-bottom: 15px;">
+                    <i class="fa-solid fa-droplet"></i>
+                    <span>PulseLink</span>
+                </div>
+                <h2>Welcome Back</h2>
+                <p>Login to manage your profile and requests</p>
+            </div>
+
+            <!-- Alerts -->
+            <div th:if="${param.error}" class="alert alert-error">
+                <i class="fa-solid fa-circle-exclamation"></i> Invalid email or password!
+            </div>
+            <div th:if="${param.logout}" class="alert alert-success">
+                <i class="fa-solid fa-circle-check"></i> You have logged out successfully.
+            </div>
+            <div th:if="${param.registered}" class="alert alert-success">
+                <i class="fa-solid fa-circle-check"></i> Registration successful! You can now log in.
+            </div>
+            <div th:if="${param.reset}" class="alert alert-success">
+                <i class="fa-solid fa-circle-check"></i> Password has been reset. Please log in.
+            </div>
+
+            <form th:action="@{/login}" method="post">
+                <!-- Email -->
+                <div class="form-group">
+                    <input type="email" id="email" name="email" class="form-input" placeholder=" " required autocomplete="email">
+                    <label for="email" class="form-label">Email Address</label>
+                </div>
+
+                <!-- Password -->
+                <div class="form-group password-wrapper">
+                    <input type="password" id="password" name="password" class="form-input" placeholder=" " required autocomplete="current-password">
+                    <label for="password" class="form-label">Password</label>
+                    <i class="fa-solid fa-eye password-toggle"></i>
+                </div>
+
+                <!-- Extras -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; font-size: 0.85rem;">
+                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; color: var(--text-light);">
+                        <input type="checkbox" name="remember-me" style="accent-color: var(--primary-dark);"> Remember me
+                    </label>
+                    <a th:href="@{/forgot-password}" style="color: var(--primary-dark); font-weight: 500;">Forgot Password?</a>
+                </div>
+
+                <!-- Submit -->
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 14px;">Sign In</button>
+            </form>
+
+            <div style="text-align: center; margin-top: 24px; font-size: 0.9rem; color: var(--text-light);">
+                Don't have an account? <a th:href="@{/register}" style="color: var(--primary-dark); font-weight: 600;">Register Here</a>
+            </div>
+
+            <!-- Demo accounts card -->
+            <div class="demo-accounts-card">
+                <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--primary-dark); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-key"></i> Demo Accounts
+                </h4>
+                <div class="demo-account-item">
+                    <div class="demo-account-details">
+                        <strong>Admin:</strong> admin@pulselink.com (Admin@123)
+                    </div>
+                    <button class="btn btn-secondary copy-btn" data-email="admin@pulselink.com" data-password="Admin@123" style="padding: 4px 10px; font-size: 0.75rem; border-radius: var(--radius-sm);">
+                        <i class="fa-solid fa-copy"></i>
+                    </button>
+                </div>
+                <div class="demo-account-item">
+                    <div class="demo-account-details">
+                        <strong>Donor:</strong> donor@pulselink.com (Donor@123)
+                    </div>
+                    <button class="btn btn-secondary copy-btn" data-email="donor@pulselink.com" data-password="Donor@123" style="padding: 4px 10px; font-size: 0.75rem; border-radius: var(--radius-sm);">
+                        <i class="fa-solid fa-copy"></i>
+                    </button>
+                </div>
+                <div class="demo-account-item">
+                    <div class="demo-account-details">
+                        <strong>Patient:</strong> patient@pulselink.com (Patient@123)
+                    </div>
+                    <button class="btn btn-secondary copy-btn" data-email="patient@pulselink.com" data-password="Patient@123" style="padding: 4px 10px; font-size: 0.75rem; border-radius: var(--radius-sm);">
+                        <i class="fa-solid fa-copy"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script th:src="@{/js/main.js}"></script>
+</body>
+</html>
