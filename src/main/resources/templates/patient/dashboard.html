@@ -117,7 +117,7 @@
                                 <tr th:each="req : ${requests}">
                                     <td th:text="${req.bloodGroup}" style="font-weight: 600; color: var(--primary-dark);">O+</td>
                                     <td th:text="${req.unitsRequested}">1</td>
-                                    <td th:text="${#temporals.format(req.requiredDate, 'yyyy-MM-dd')}">Date</td>
+                                    <td th:text="${req.requiredDate != null ? #temporals.format(req.requiredDate, 'yyyy-MM-dd') : 'N/A'}">Date</td>
                                     <td>
                                         <span class="badge" th:classappend="'badge-' + ${#strings.toLowerCase(req.status)}" th:text="${req.status}">PENDING</span>
                                     </td>

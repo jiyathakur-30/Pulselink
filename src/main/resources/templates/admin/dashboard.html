@@ -150,7 +150,7 @@
                                     <td th:text="${don.donor.user.name}">Donor</td>
                                     <td th:text="${don.bloodGroup}">A+</td>
                                     <td th:text="${don.unitsDonated}">1</td>
-                                    <td th:text="${#temporals.format(don.donationDate, 'yyyy-MM-dd')}">Date</td>
+                                    <td th:text="${don.donationDate != null ? #temporals.format(don.donationDate, 'yyyy-MM-dd') : 'N/A'}">Date</td>
                                 </tr>
                                 <tr th:if="${#lists.isEmpty(recentDonations)}">
                                     <td colspan="4" style="text-align: center; color: var(--text-light);">No recent donations found</td>

@@ -61,7 +61,7 @@
                                 <td th:text="${don.donor.user.name}">Donor Name</td>
                                 <td th:text="${don.bloodGroup}" style="font-weight: 600; color: var(--primary-dark);">A+</td>
                                 <td th:text="${don.unitsDonated}">1</td>
-                                <td th:text="${#temporals.format(don.donationDate, 'yyyy-MM-dd')}">Date</td>
+                                <td th:text="${don.donationDate != null ? #temporals.format(don.donationDate, 'yyyy-MM-dd') : 'N/A'}">Date</td>
                                 <td th:text="${don.certificateCode}" style="font-family: monospace; font-weight: 600;">CERT-CODE</td>
                             </tr>
                             <tr th:if="${#lists.isEmpty(donationPage.content)}">

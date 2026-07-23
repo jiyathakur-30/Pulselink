@@ -18,8 +18,13 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + username));
+        if (username == null || username.trim().isEmpty()) {
+            throw new UsernameNotFoundException("Email cannot be empty");
+        }
+        String cleanEmail = username.trim();
+        User user = userRepository.findByEmail(cleanEmail)
+                .orElseGet(() -> userRepository.findByEmail(cleanEmail.toLowerCase())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + username)));
 
         if (!"ACTIVE".equals(user.getStatus())) {
             throw new UsernameNotFoundException("User account is inactive: " + username);

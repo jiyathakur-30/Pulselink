@@ -44,7 +44,7 @@
                         <div style="font-size: 2.5rem; color: var(--warning);"><i class="fa-solid fa-clock"></i></div>
                         <div style="font-weight: 600; color: var(--warning); margin-top: 5px;">Not Eligible Yet</div>
                         <div style="font-size: 0.8rem; color: var(--text-light); margin-top: 5px;">
-                            Next eligible: <span th:text="${#temporals.format(nextEligibleDate, 'yyyy-MM-dd')}">Date</span>
+                            Next eligible: <span th:text="${nextEligibleDate != null ? #temporals.format(nextEligibleDate, 'yyyy-MM-dd') : 'Available'}">Date</span>
                         </div>
                     </div>
                 </div>
@@ -97,7 +97,7 @@
                             </thead>
                             <tbody>
                                 <tr th:each="appt : ${appointments}">
-                                    <td th:text="${#temporals.format(appt.appointmentDate, 'yyyy-MM-dd')}">Date</td>
+                                    <td th:text="${appt.appointmentDate != null ? #temporals.format(appt.appointmentDate, 'yyyy-MM-dd') : 'N/A'}">Date</td>
                                     <td th:text="${appt.appointmentTime}">Time</td>
                                     <td>
                                         <span class="badge" th:classappend="'badge-' + ${#strings.toLowerCase(appt.status)}" th:text="${appt.status}">SCHEDULED</span>
@@ -130,7 +130,7 @@
                         </thead>
                         <tbody>
                             <tr th:each="don : ${donations}">
-                                <td th:text="${#temporals.format(don.donationDate, 'yyyy-MM-dd')}">Date</td>
+                                <td th:text="${don.donationDate != null ? #temporals.format(don.donationDate, 'yyyy-MM-dd') : 'N/A'}">Date</td>
                                 <td th:text="${don.bloodGroup}" style="font-weight: 600; color: var(--primary-dark);">O+</td>
                                 <td th:text="${don.unitsDonated}">1</td>
                                 <td th:text="${don.certificateCode}" style="font-family: monospace;">CERT-CODE</td>

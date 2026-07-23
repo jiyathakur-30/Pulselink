@@ -54,7 +54,7 @@ public class UserService {
 
         // Create User
         User user = new User();
-        user.setEmail(dto.getEmail());
+        user.setEmail(dto.getEmail() != null ? dto.getEmail().trim().toLowerCase() : "");
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
         user.setName(dto.getName());
         user.setPhone(dto.getPhone());

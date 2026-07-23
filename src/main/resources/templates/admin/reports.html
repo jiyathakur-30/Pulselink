@@ -97,7 +97,7 @@
                             <tr th:each="rep : ${reportsList}">
                                 <td th:text="${rep.reportType}">STOCK</td>
                                 <td th:text="${rep.generatedBy.name}">Admin</td>
-                                <td th:text="${#temporals.format(rep.generatedAt, 'yyyy-MM-dd HH:mm:ss')}">Time</td>
+                                <td th:text="${rep.generatedAt != null ? #temporals.format(rep.generatedAt, 'yyyy-MM-dd HH:mm:ss') : 'N/A'}">Time</td>
                                 <td style="text-align: right;">
                                     <a th:href="${rep.filePath}" class="btn btn-secondary" style="padding: 6px 14px; font-size: 0.8rem;"><i class="fa-solid fa-download"></i> Download</a>
                                 </td>

@@ -175,14 +175,18 @@ a {
     color: var(--primary-dark);
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 /* Hero Section */
 .hero-section {
     display: grid;
     grid-template-columns: 1.1fr 0.9fr;
     align-items: center;
-    padding: 60px 6%;
+    padding: 60px 6% 20px 6%;
     gap: 40px;
-    min-height: 80vh;
+    min-height: auto;
 }
 
 .hero-text h1 {
@@ -210,7 +214,6 @@ a {
     gap: 20px;
 }
 
-/* Animated Blood Drop Illustration */
 .hero-illustration {
     display: flex;
     justify-content: center;
@@ -218,24 +221,57 @@ a {
     position: relative;
 }
 
-.blood-drop-animation {
-    width: 200px;
-    height: 200px;
-    background: radial-gradient(circle at 35% 35%, var(--primary-light) 0%, var(--primary-dark) 100%);
-    border-radius: 50% 50% 50% 50% / 30% 30% 70% 70%;
-    transform: rotate(-45deg);
-    box-shadow: 0 20px 40px rgba(219, 39, 119, 0.35);
-    animation: float-drop 4s ease-in-out infinite, shape-shift 6s ease-in-out infinite alternate;
+.hero-svg-illustration {
+    width: 370px;
+    height: 370px;
+    max-width: 100%;
 }
 
-@keyframes float-drop {
-    0%, 100% { transform: translateY(0) rotate(-45deg); }
-    50% { transform: translateY(-15px) rotate(-45deg); }
+.ecg-3d-drop-group {
+    animation: ecg-heartbeat-float 4.5s ease-in-out infinite;
 }
 
-@keyframes shape-shift {
-    0% { border-radius: 50% 50% 50% 50% / 30% 30% 70% 70%; }
-    100% { border-radius: 40% 60% 40% 60% / 40% 40% 60% 60%; }
+.ecg-ground-shadow {
+    animation: ecg-shadow-float 4.5s ease-in-out infinite;
+}
+
+@keyframes ecg-heartbeat-float {
+    0% {
+        transform: translateY(0px) scale(1);
+    }
+    40% {
+        transform: translateY(-4px) scale(1);
+    }
+    45% {
+        transform: translateY(-4px) scale(1.035);
+    }
+    50% {
+        transform: translateY(-4px) scale(1.005);
+    }
+    55% {
+        transform: translateY(-4px) scale(1.02);
+    }
+    60% {
+        transform: translateY(-4px) scale(1);
+    }
+    100% {
+        transform: translateY(0px) scale(1);
+    }
+}
+
+@keyframes ecg-shadow-float {
+    0% {
+        transform: scale(1);
+        opacity: 0.85;
+    }
+    40%, 60% {
+        transform: scale(0.88);
+        opacity: 0.55;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0.85;
+    }
 }
 
 /* Statistics Section */

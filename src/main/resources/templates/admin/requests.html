@@ -62,7 +62,7 @@
                                 <td th:text="${req.patient.user.name}">Patient Name</td>
                                 <td th:text="${req.bloodGroup}" style="font-weight: 600; color: var(--primary-dark);">O+</td>
                                 <td th:text="${req.unitsRequested}">2</td>
-                                <td th:text="${#temporals.format(req.requiredDate, 'yyyy-MM-dd')}">Date</td>
+                                <td th:text="${req.requiredDate != null ? #temporals.format(req.requiredDate, 'yyyy-MM-dd') : 'N/A'}">Date</td>
                                 <td th:text="${req.justification}">Emergency</td>
                                 <td>
                                     <span class="badge" th:classappend="'badge-' + ${#strings.toLowerCase(req.status)}" th:text="${req.status}">PENDING</span>

@@ -60,7 +60,7 @@
                     </div>
                     
                     <div style="font-size: 0.75rem; color: var(--text-light); margin-top: 12px;">
-                        Last updated: <span th:text="${#temporals.format(item.lastUpdated, 'yyyy-MM-dd HH:mm')}">Time</span>
+                        Last updated: <span th:text="${item.lastUpdated != null ? #temporals.format(item.lastUpdated, 'yyyy-MM-dd HH:mm') : 'Recently'}">Time</span>
                     </div>
                 </div>
             </div>
