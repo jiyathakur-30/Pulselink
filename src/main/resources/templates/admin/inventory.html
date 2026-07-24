@@ -56,7 +56,7 @@
 
                     <!-- Progress Bar (Based on Max 40 units for 100%) -->
                     <div class="progress-container">
-                        <div class="progress-bar" th:style="'width: ' + ${T(java.lang.Math).min(100, item.unitsAvailable * 2.5)} + '%'"></div>
+                        <div class="progress-bar" th:style="'width: ' + ${item.unitsAvailable != null ? (item.unitsAvailable gt 40 ? 100 : item.unitsAvailable * 2.5) : 0} + '%'"></div>
                     </div>
                     
                     <div style="font-size: 0.75rem; color: var(--text-light); margin-top: 12px;">
